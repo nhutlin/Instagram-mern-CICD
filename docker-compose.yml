@@ -1,0 +1,39 @@
+version: "3"
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - data:/data/db
+  be:
+    image: nhutlinh231/backend
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      # - ./public/uploads/posts:/app/public/uploads/posts
+      # - ./public/uploads/profiles:/app/public/uploads/profiles
+    # env_file:
+    #   - ./env/backend.env
+    depends_on:
+      - mongodb
+  fe:
+    image: nhutlinh231/frontend
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      # - ./frontend/public/uploads/posts:/app/public/uploads/posts
+      # - ./frontend/public/uploads/profiles:/app/public/uploads/profiles
+    stdin_open: true
+    tty: true
+    depends_on:
+      - be
+volumes:
+  data:
