@@ -5,7 +5,7 @@ services:
     volumes:
       - data:/data/db
   be:
-    image: nhutlinh231/backend
+    image: nhutlinh231/backend-k8s
     # build:
     #   context: .
     #   dockerfile: Dockerfile
@@ -21,7 +21,7 @@ services:
     depends_on:
       - mongodb
   fe:
-    image: nhutlinh231/frontend
+    image: nhutlinh231/frontend-k8s
     # build:
     #   context: ./frontend
     #   dockerfile: Dockerfile
