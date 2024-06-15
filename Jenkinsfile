@@ -1,8 +1,10 @@
 pipeline {
 
   environment {
-    dockerimagenameBE= "nhutlinh231/backend-k8s"
-    dockerimagenameFE= "nhutlinh231/frontend-k8s"
+    dockerimagenameBE = "nhutlinh231/backend-k8s"
+    dockerimagenameFE = "nhutlinh231/frontend-k8s"
+    dockerimageFE = ""
+    dockerImageBE = docker.build dockerimagenameBE
 
   }
 
@@ -47,16 +49,16 @@ pipeline {
     }
 
     stage('Pushing Image') {
-        environment {
-          registryCredential = 'dockerhublogin'
-        }
-        steps {
-          script {
-            docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
-            sh 'docker push ${dockerimagenameBE}'
-            sh 'docker push ${dockerimagenameFE}'
+      environment {
+        registryCredential = 'dockerhublogin'
+      }
+      steps{
+        script {
+          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+            dockerImage.push("latest")
           }
         }
+
       }
     }
     stage('Deploy to K8s'){
