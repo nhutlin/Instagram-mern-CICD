@@ -47,23 +47,18 @@ pipeline {
     }
 
     stage('Pushing Image') {
-      environment {
-               registryCredential = 'dockerhublogin'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            // dockerImageFE.push("latest")
-            // dockerImageBE.push("latest")
-            sh 'docker push $dockerimagenameBE'
-            sh 'docker push $dockerimagenameFE'
-
+        environment {
+          registryCredential = 'dockerhublogin'
+        }
+        steps {
+          script {
+            docker.withRegistry('https://registry.hub.docker.com', registryCredential) {
+            sh 'docker push ${dockerimagenameBE}'
+            sh 'docker push ${dockerimagenameFE}'
           }
         }
-
       }
     }
-
     stage('Deploy to K8s'){
       steps{
         script{
