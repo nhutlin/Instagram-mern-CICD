@@ -1,45 +1,47 @@
 pipeline {
 
   environment {
-    dockerimagename = "nhutlinh231/frontend-k8s"
-    dockerImage = ""
+    dockerimagenameBE= "nhutlinh231/backend-k8s"
+    dockerimagenameFE= "nhutlinh231/frontend-k8s"
 
   }
 
   agent any
 
   tools {
-    nodejs '21.7.1'
+    nodejs '20.13.1'
   }
 
   stages {
 
     stage('Checkout Source') {
       steps {
-        git branch: 'main', url: 'https://github.com/nhutlin/Instagram-frontend.git'
+        git branch: 'main', url: 'https://github.com/nhutlin/Instagram-mern-CICD.git'
       }
     }
 
     stage('Build') {
       steps {
-        sh 'npm version'
-        sh 'cd /var/jenkins_home/workspace/Instagram-CICD/frontend/ && npm install && npm run build'
-        sh 'npm install'
+        sh 'npm -v'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm run build'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
         echo 'Run build successfully...'
       }
     }
 
     stage('Test') {
       steps {
-        sh 'cd /var/jenkins_home/workspace/FE-Instagram-CICD && npm run test'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run test'
         echo 'Run test successfully...'
       }
     }
 
+
     stage('Build image') {
       steps{
         script {
-          dockerImage = docker.build dockerimagename
+          sh 'docker build -t $dockerimagenameBE .'
+          sh 'docker build -t $dockerimagenameFE ./frontend'
         }
       }
     }
@@ -51,26 +53,38 @@ pipeline {
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
+            // dockerImageFE.push("latest")
+            // dockerImageBE.push("latest")
+            sh 'docker push $dockerimagenameBE'
+            sh 'docker push $dockerimagenameFE'
+
+          }
+        }
+
+      }
+    }
+
+    stage('Deploy to K8s'){
+      steps{
+        script{
+          dir('Kubernetes') {
+            withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin@kubernetes', credentialsId: 'kubeconfig', namespace: 'default', restrictKubeConfigAccess: false) {
+              sh 'kubectl apply -f /var/lib/jenkins/workspace/Instagram-CICD/deployment.yml'
+              sh 'kubectl get all'
+            } 
           }
         }
       }
     }
-
-    stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "deployment.yml", kubeconfigId: "kubernetes")
-        }
-      }
+  }
+  post {
+    always {
+            // Clean up docker images
+      cleanWs()
+      sh "docker image prune -f"
     }
   }
-
-  post {
-        always {
-            // Clean up docker images
-            cleanWs()
-            sh "docker image prune -f"
-        }
-    }
 }
+  
+
+
