@@ -3,8 +3,8 @@ pipeline {
   environment {
     dockerimagenameBE = "nhutlinh231/backend-k8s"
     dockerimagenameFE = "nhutlinh231/frontend-k8s"
-    dockerimageFE = ""
-    dockerImageBE = docker.build dockerimagenameBE
+    dockerImageBE = ""
+    dockerImageFE = ""
 
   }
 
@@ -42,8 +42,10 @@ pipeline {
     stage('Build image') {
       steps{
         script {
-          sh 'docker build -t $dockerimagenameBE .'
-          sh 'docker build -t $dockerimagenameFE ./frontend'
+          dockerImageBE = docker.build dockerimagenameBE
+          sh 'cd frontend/'
+          dockerImageFE = docker.build dockerimagenameFE
+          
         }
       }
     }
@@ -55,7 +57,8 @@ pipeline {
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            sh 'docker push $dockerimagenameBE'
+            dockerImageFE.push("latest")
+            dockerImageBE.push("latest")
           }
         }
 
