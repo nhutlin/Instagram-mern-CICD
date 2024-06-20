@@ -42,26 +42,26 @@ pipeline {
     //     echo 'Run test successfully...'
     //   }
     // }
-        stage('SonarCloud Analysis') {
-            steps {
-                withSonarQubeEnv('SonarCloud') {
-                    sh "sonar-scanner \
-                        -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
-                        -Dsonar.organization=${env.SONAR_ORGANIZATION} \
-                        -Dsonar.sources=. \
-                        -Dsonar.host.url=https://sonarcloud.io \
-                        -Dsonar.login=${env.SONAR_TOKEN}"
-                }
-            }
+    stage('SonarCloud Analysis') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "sonar-scanner \
+          -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
+          -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${env.SONAR_TOKEN}"
         }
+      }
+    }
         
-        stage("Quality Gate") {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
+    stage("Quality Gate") {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          waitForQualityGate abortPipeline: true
         }
+      }
+    }
 
 
     stage('Build image') {
@@ -108,13 +108,14 @@ pipeline {
     }
   }
   post {
-    always {
-            // Clean up docker images
-      cleanWs()
-      sh "docker image prune -f"
+        always {
+            script {
+                if (getContext(hudson.FilePath)) {
+                    deleteDir()
+                }
+            }
+        }
     }
-  }
-}
-  
+
 
 
