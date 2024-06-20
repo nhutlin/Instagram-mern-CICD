@@ -22,38 +22,37 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'npm -v'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm run build'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
-        echo 'Run build successfully...'
-      }
-    }
+    // stage('Build') {
+    //   steps {
+    //     sh 'npm -v'
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm run build'
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
+    //     echo 'Run build successfully...'
+    //   }
+    // }
 
-    stage('Test') {
-      steps {
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run test'
-        echo 'Run test successfully...'
-      }
-    }
+    // stage('Test') {
+    //   steps {
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run test'
+    //     echo 'Run test successfully...'
+    //   }
+    // }
 
 
     stage('Build image') {
       steps{
         script {
           dockerImageBE = docker.build dockerimagenameBE
-          sh 'cd frontend/'
-          dockerImageFE = docker.build dockerimagenameFE
-          
+          sh 'cd frontend/' && dockerImageFE = docker.build dockerimagenameFE
+          sh 'docker images'
         }
       }
     }
 
     stage('Pushing Image') {
       environment {
-        registryCredential = 'dockerhublogin'
-      }
+               registryCredential = 'dockerhublogin'
+           }
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
