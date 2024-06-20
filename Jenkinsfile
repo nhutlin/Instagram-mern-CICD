@@ -43,8 +43,11 @@ pipeline {
       steps{
         script {
           dockerImageBE = docker.build dockerimagenameBE
-          sh 'cd frontend/' && dockerImageFE = docker.build dockerimagenameFE
-          sh 'docker images'
+          // sh 'cd frontend/'
+          // dockerImageFE = docker.build dockerimagenameFE
+          // sh 'docker images'
+          dockerImageFE = docker.build(dockerimagenameFE, 'frontend/.')
+          
         }
       }
     }
@@ -56,9 +59,11 @@ pipeline {
       steps{
         script {
           docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImageFE.push("latest")
-            dockerImageBE.push("latest")
-          }
+
+          dockerImageFE.push('latest')
+          dockerImageBE.push('latest')
+
+
         }
 
       }
