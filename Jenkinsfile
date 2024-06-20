@@ -6,6 +6,11 @@ pipeline {
     dockerImageBE = ""
     dockerImageFE = ""
 
+    SONARQUBE_ENV = 'SonarCloud'
+    SONAR_PROJECT_KEY = 'nhutlin_Instagram-mern-CICD'
+    SONAR_ORGANIZATION = 'NhutLinh'
+    SONAR_TOKEN = credentials('633c42fe50509b7d8f8f81cb9f03df23cb8c6524')
+
   }
 
   agent any
@@ -37,6 +42,26 @@ pipeline {
     //     echo 'Run test successfully...'
     //   }
     // }
+        stage('SonarCloud Analysis') {
+            steps {
+                withSonarQubeEnv('SonarCloud') {
+                    sh "sonar-scanner \
+                        -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
+                        -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=https://sonarcloud.io \
+                        -Dsonar.login=${env.SONAR_TOKEN}"
+                }
+            }
+        }
+        
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
 
 
     stage('Build image') {
