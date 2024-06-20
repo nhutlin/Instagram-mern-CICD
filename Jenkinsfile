@@ -64,8 +64,9 @@ pipeline {
           dockerImageBE.push('latest')
 
 
-        }
+         }
 
+        }
       }
     }
     stage('Deploy to K8s'){
