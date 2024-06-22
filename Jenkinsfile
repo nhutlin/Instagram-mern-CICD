@@ -42,26 +42,26 @@
 //     //     echo 'Run test successfully...'
 //     //   }
 //     // }
-//     stage('SonarCloud Analysis') {
-//       steps {
-//         withSonarQubeEnv('SonarCloud') {
-//           sh "sonar-scanner \
-//           -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
-//           -Dsonar.organization=${env.SONAR_ORGANIZATION} \
-//           -Dsonar.sources=. \
-//           -Dsonar.host.url=https://sonarcloud.io \
-//           -Dsonar.login=${env.SONAR_TOKEN}"
-//         }
-//       }
-//     }
+    // stage('SonarCloud Analysis') {
+    //   steps {
+    //     withSonarQubeEnv('SonarCloud') {
+    //       sh "sonar-scanner \
+    //       -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
+    //       -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+    //       -Dsonar.sources=. \
+    //       -Dsonar.host.url=https://sonarcloud.io \
+    //       -Dsonar.login=${env.SONAR_TOKEN}"
+    //     }
+    //   }
+    // }
         
-//     stage("Quality Gate") {
-//       steps {
-//         timeout(time: 1, unit: 'HOURS') {
-//           waitForQualityGate abortPipeline: false
-//         }
-//       }
-//     }
+    // stage("Quality Gate") {
+    //   steps {
+    //     timeout(time: 1, unit: 'HOURS') {
+    //       waitForQualityGate abortPipeline: false
+    //     }
+    //   }
+    // }
 
 
 //     stage('Build image') {
@@ -150,7 +150,8 @@ pipeline {
       steps {
         sh 'npm version'
         sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm build'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run build'
 
         echo 'Install npm successfully...'
       }
@@ -161,6 +162,27 @@ pipeline {
         script {
           dockerImageBE = docker.build(dockerimagenameBE, '.')
           dockerImageFE = docker.build(dockerImagenameFE, 'frontend/.')
+        }
+      }
+    }
+
+    stage('SonarCloud Analysis') {
+      steps {
+        withSonarQubeEnv('SonarCloud') {
+          sh "sonar-scanner \
+          -Dsonar.projectKey= \
+          -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${env.SONAR_TOKEN}"
+        }
+      }
+    }
+        
+    stage("Quality Gate") {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          waitForQualityGate abortPipeline: false
         }
       }
     }
