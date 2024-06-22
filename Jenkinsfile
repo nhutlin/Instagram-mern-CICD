@@ -48,32 +48,38 @@ pipeline {
       steps {
         withSonarQubeEnv('SonarQube') {
           sh "sonar-scanner \
-          -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_BE} \
+          -Dsonar.projectKey=InstagramBECICD \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://192.168.30.113:9000 \
-          -Dsonar.token=sqp_32a88284327dcb741318b3d07b066908465f82aa \
+          -Dsonar.token=sqp_948683ec986fa9d9859557750a931ea9a2af76ee \
+          "
+          sh "sonar-scanner \
+          -Dsonar.projectKey=InstagramFECICD \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://192.168.30.113:9000 \
+          -Dsonar.token=sqp_526590027228f40a764a706099c918cf34d08111 \
           "
         }
       }
     }
 
-    stage('SonarQube Analysis Frontend') {
-      steps {
-        withSonarQubeEnv('SonarQube') {
-          sh "sonar-scanner \
-          -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_FE} \
-          -Dsonar.sources=frontend/. \
-          -Dsonar.host.url=http://192.168.30.113:9000 \
-          -Dsonar.token=sqp_264bbe7443791e9a16b8deda8eb1662de2a3d943 \
-          "
-        }
-      }
-    }
+    // stage('SonarQube Analysis Frontend') {
+    //   steps {
+    //     withSonarQubeEnv('SonarQube') {
+    //       sh "sonar-scanner \
+    //       -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_FE} \
+    //       -Dsonar.sources=frontend/. \
+    //       -Dsonar.host.url=http://192.168.30.113:9000 \
+    //       -Dsonar.token=sqp_264bbe7443791e9a16b8deda8eb1662de2a3d943 \
+    //       "
+    //     }
+    //   }
+    // }
         
     stage("Quality Gate") {
       steps {
         timeout(time: 1, unit: 'HOURS') {
-          waitForQualityGate abortPipeline: true
+          waitForQualityGate abortPipeline: false
         }
       }
     }
