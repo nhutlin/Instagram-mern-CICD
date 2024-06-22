@@ -133,6 +133,7 @@ pipeline {
     // SONAR_PROJECT_KEY = 'nhutlin_Instagram-mern-CICD'
     // SONAR_ORGANIZATION = 'NhutLinh'
     // SONAR_TOKEN = credentials('633c42fe50509b7d8f8f81cb9f03df23cb8c6524')
+    // -Dsonar.login=${env.SONAR_TOKEN}
   }
 
   agent any
@@ -177,7 +178,7 @@ pipeline {
           -Dsonar.organization=${env.SONAR_ORGANIZATION} \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${env.SONAR_TOKEN}"
+          "
         }
       }
     }
