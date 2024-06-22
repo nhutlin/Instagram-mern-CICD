@@ -129,10 +129,10 @@ pipeline {
     dockerimagenameBE = "nhutlinh231/backend-k8s"
     dockerImageBE = ""
 
-    SONARQUBE_ENV = 'SonarCloud'
-    SONAR_PROJECT_KEY = 'nhutlin_Instagram-mern-CICD'
-    SONAR_ORGANIZATION = 'NhutLinh'
-    SONAR_TOKEN = credentials('633c42fe50509b7d8f8f81cb9f03df23cb8c6524')
+    // SONARQUBE_ENV = 'SonarCloud'
+    // SONAR_PROJECT_KEY = 'nhutlin_Instagram-mern-CICD'
+    // SONAR_ORGANIZATION = 'NhutLinh'
+    // SONAR_TOKEN = credentials('633c42fe50509b7d8f8f81cb9f03df23cb8c6524')
   }
 
   agent any
