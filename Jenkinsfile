@@ -129,7 +129,10 @@ pipeline {
     dockerimagenameBE = "nhutlinh231/backend-k8s"
     dockerImageBE = ""
 
-
+    SONARQUBE_ENV = 'SonarCloud'
+    SONAR_PROJECT_KEY = 'nhutlin_Instagram-mern-CICD'
+    SONAR_ORGANIZATION = 'NhutLinh'
+    SONAR_TOKEN = credentials('633c42fe50509b7d8f8f81cb9f03df23cb8c6524')
   }
 
   agent any
@@ -146,16 +149,16 @@ pipeline {
       }
     }
 
-    stage('Build') {
-      steps {
-        sh 'npm version'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install'
-        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run build'
+    // stage('Build') {
+    //   steps {
+    //     sh 'npm version'
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install'
+    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm run build'
 
-        echo 'Install npm successfully...'
-      }
-    }
+    //     echo 'Install npm successfully...'
+    //   }
+    // }
 
     stage('Build image') {
       steps{
