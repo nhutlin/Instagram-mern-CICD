@@ -64,6 +64,7 @@ pipeline {
           -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_FE} \
           -Dsonar.sources=frontend/. \
           -Dsonar.host.url=http://192.168.30.113:9000 \
+          -Dsonar.token=sqp_264bbe7443791e9a16b8deda8eb1662de2a3d943
           "
         }
       }
