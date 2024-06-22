@@ -27,14 +27,14 @@ pipeline {
       }
     }
 
-    // stage('Build') {
-    //   steps {
-    //     sh 'npm -v'
-    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm run build'
-    //     sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
-    //     echo 'Run build successfully...'
-    //   }
-    // }
+    stage('Build') {
+      steps {
+        sh 'npm -v'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD/frontend && npm install && npm run build'
+        sh 'cd /var/lib/jenkins/workspace/Instagram-CICD && npm install'
+        echo 'Run build successfully...'
+      }
+    }
 
     // stage('Test') {
     //   steps {
