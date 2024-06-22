@@ -84,7 +84,7 @@ pipeline {
   
   post {
         always {
-            // Clean up docker images
+            // Clean up docker all images
             cleanWs()
             sh "docker image prune -a"
         }
