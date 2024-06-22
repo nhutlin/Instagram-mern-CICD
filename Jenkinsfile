@@ -31,18 +31,32 @@ pipeline {
       }
     }
 
+    // stage('SonarCloud Analysis') {
+    //   steps {
+    //     withSonarQubeEnv('SonarCloud') {
+    //       sh "sonar-scanner \
+    //       -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
+    //       -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+    //       -Dsonar.sources=. \
+    //       -Dsonar.host.url=https://sonarcloud.io \
+    //       "
+    //     }
+    //   }
+    // }
+    
     stage('SonarCloud Analysis') {
       steps {
         withSonarQubeEnv('SonarCloud') {
           sh "sonar-scanner \
-          -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
-          -Dsonar.organization=${env.SONAR_ORGANIZATION} \
+          -Dsonar.projectKey=InstagramCICD \
           -Dsonar.sources=. \
-          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.host.url=http://192.168.30.113:9000 \
+          -Dsonar.token=sqp_04cd5b353dc7c79fa3dba2b77b222ef7ca53281b
           "
         }
       }
     }
+    
         
     stage("Quality Gate") {
       steps {
@@ -86,7 +100,7 @@ pipeline {
         always {
             // Clean up docker all images
             cleanWs()
-            sh "docker image prune -a"
+            sh "docker image prune -a -y"
         }
     }
 }
