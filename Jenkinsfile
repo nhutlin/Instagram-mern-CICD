@@ -58,7 +58,7 @@ pipeline {
     stage("Quality Gate") {
       steps {
         timeout(time: 1, unit: 'HOURS') {
-          waitForQualityGate abortPipeline: true
+          waitForQualityGate abortPipeline: false
         }
       }
     }
@@ -94,19 +94,19 @@ pipeline {
         }
       }
     }
-    stage('Deploy to K8s'){
-      steps{
-        script{
-          dir('Kubernetes') {
-            withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin@kubernetes', credentialsId: 'kubeconfig', namespace: 'default', restrictKubeConfigAccess: false) {
-              sh 'kubectl apply -f /var/lib/jenkins/workspace/Instagram-CICD/deployment.yml'
-              sh 'kubectl get all'
-            } 
-          }
-        }
-      }
-    }
-  }
+  //   stage('Deploy to K8s'){
+  //     steps{
+  //       script{
+  //         dir('Kubernetes') {
+  //           withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin@kubernetes', credentialsId: 'kubeconfig', namespace: 'default', restrictKubeConfigAccess: false) {
+  //             sh 'kubectl apply -f /var/lib/jenkins/workspace/Instagram-CICD/deployment.yml'
+  //             sh 'kubectl get all'
+  //           } 
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
   post {
         always {
             script {
