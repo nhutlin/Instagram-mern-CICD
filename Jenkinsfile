@@ -31,6 +31,7 @@ pipeline {
       }
     }
 
+    // SonarCloud (optional)
     // stage('SonarCloud Analysis') {
     //   steps {
     //     withSonarQubeEnv('SonarCloud') {
@@ -51,7 +52,13 @@ pipeline {
           -Dsonar.projectKey=InstagramBECICD \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://192.168.30.113:9000 \
-          -Dsonar.token=sqp_948683ec986fa9d9859557750a931ea9a2af76ee \
+          "
+        }
+        withSonarQubeEnv('SonarQubeFE') {
+          sh "sonar-scanner \
+          -Dsonar.projectKey=InstagramFECICD \
+          -Dsonar.sources=frontend/. \
+          -Dsonar.host.url=http://192.168.30.113:9000 \
           "
         }
       }
