@@ -44,12 +44,24 @@ pipeline {
     //   }
     // }
     
-    stage('SonarQube Analysis') {
+    stage('SonarQube Analysis Backend') {
       steps {
         withSonarQubeEnv('SonarQube') {
           sh "sonar-scanner \
-          -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY} \
+          -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_BE} \
           -Dsonar.sources=. \
+          -Dsonar.host.url=http://192.168.30.113:9000 \
+          "
+        }
+      }
+    }
+
+    stage('SonarQube Analysis Frontend') {
+      steps {
+        withSonarQubeEnv('SonarQube') {
+          sh "sonar-scanner \
+          -Dsonar.projectKey=${env.SONARQUBE_PROJECT_KEY_FE} \
+          -Dsonar.sources=frontend/. \
           -Dsonar.host.url=http://192.168.30.113:9000 \
           "
         }
