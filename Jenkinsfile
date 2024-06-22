@@ -174,7 +174,7 @@ pipeline {
       steps {
         withSonarQubeEnv('SonarCloud') {
           sh "sonar-scanner \
-          -Dsonar.projectKey= \
+          -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
           -Dsonar.organization=${env.SONAR_ORGANIZATION} \
           -Dsonar.sources=. \
           -Dsonar.host.url=https://sonarcloud.io \
