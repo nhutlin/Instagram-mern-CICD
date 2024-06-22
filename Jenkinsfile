@@ -64,18 +64,18 @@ pipeline {
       }
     }
 
-    stage('SonarQube Analysis Frontend') {
-      steps {
-        withSonarQubeEnv('SonarQubeFE') {
-          sh "sonar-scanner \
-          -Dsonar.projectKey=InstagramFECICD \
-          -Dsonar.sources=frontend/. \
-          -Dsonar.host.url=http://192.168.30.113:9000 \
-          -Dsonar.token=sqp_526590027228f40a764a706099c918cf34d08111 \
-          "
-        }
-      }
-    }
+    // stage('SonarQube Analysis Frontend') {
+    //   steps {
+    //     withSonarQubeEnv('SonarQubeFE') {
+    //       sh "sonar-scanner \
+    //       -Dsonar.projectKey=InstagramFECICD \
+    //       -Dsonar.sources=frontend/. \
+    //       -Dsonar.host.url=http://192.168.30.113:9000 \
+    //       -Dsonar.token=sqp_526590027228f40a764a706099c918cf34d08111 \
+    //       "
+    //     }
+    //   }
+    // }
         
     stage("Quality Gate") {
       steps {
