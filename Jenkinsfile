@@ -47,17 +47,10 @@ pipeline {
     
     stage('SonarQube Analysis') {
       steps {
-        withSonarQubeEnv('SonarQubeBE') {
+        withSonarQubeEnv('SonarQube') {
           sh "sonar-scanner \
-          -Dsonar.projectKey=InstagramBECICD \
+          -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} \
           -Dsonar.sources=. \
-          -Dsonar.host.url=http://192.168.30.113:9000 \
-          "
-        }
-        withSonarQubeEnv('SonarQubeFE') {
-          sh "sonar-scanner \
-          -Dsonar.projectKey=InstagramFECICD \
-          -Dsonar.sources=frontend/. \
           -Dsonar.host.url=http://192.168.30.113:9000 \
           "
         }
